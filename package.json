@@ -43,11 +43,14 @@
     "@editorjs/image": "^2.8.1",
     "@editorjs/list": "^1.8.0",
     "@editorjs/underline": "^1.1.0",
+    "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
     "@tailwindcss/typography": "^0.5.8",
     "@types/fs-extra": "^9.0.13",
+    "date-fns": "^2.29.3",
     "electron-store": "^8.1.0",
     "fs-extra": "^11.1.0",
+    "nanoid": "^4.0.0",
     "react-hot-toast": "^2.4.0",
     "react-router-dom": "^6.6.1"
   }

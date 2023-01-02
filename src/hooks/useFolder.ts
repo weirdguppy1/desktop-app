@@ -1,48 +1,51 @@
 import fs from "fs";
 import path from "path";
-import { useId } from "react";
-import toast from "react-hot-toast";
+import { nanoid } from "nanoid";
 
-const error = (error: string) => `Error! ${error}.`;
+// const error = (error: string) => `Error! ${error}.`;
 
-export const useFolder = () => {
-  const folderExists = () => fs.existsSync("~/Reflectionary");
+// TO:DO Use try-catch to catch errors for synchronous functions!!!!
+
+const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
+  const folderExists = () => fs.existsSync(folder);
 
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
 
-    const id = useId();
+    const id = nanoid();
     const formattedDate = date.toISOString().slice(0, 10);
+    const fileName = `${folder}/${formattedDate}_${id}.json`;
 
-    fs.writeFile(`${folder}/${formattedDate}-${id}.json`, "", (err) => {
-      if (err) {
-        toast.error(error("Cannot create a new file."));
-        return console.log(err);
-      }
-    });
+    const defaultData = {
+      blocks: [],
+    };
+
+    fs.writeFileSync(fileName, JSON.stringify(defaultData));
+    return `${formattedDate}_${id}.json`;
   };
 
-  const updateJournalEntry = (fileName: string, content: string) => {
+  const updateJournalEntry = (
+    fileName: string | undefined,
+    content: string
+  ) => {
     if (!folderExists()) return;
+    if (fileName === undefined) return;
+
+    console.log(content)
 
     fs.writeFile(`${folder}/${fileName}`, content, (err) => {
-      if (err) {
-        toast.error(error("Cannot update a file."));
-        return console.log(err);
-      }
+
     });
   };
 
-  const getJournalEntry = (fileName: string) => {
+  const getJournalEntry = (fileName: string | undefined) => {
     if (!folderExists()) return;
+    if (fileName === undefined) return {};
 
-    return fs.readFile(`${folder}/${fileName}`, (err, data) => {
-      if (err) {
-        toast.error(error("Unable to read file."));
-        return data;
-      }
-    });
+    const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
+    console.log(data);
+    return JSON.parse(data);
   };
   return {
     createJournalEntry,
@@ -51,3 +54,5 @@ export const useFolder = () => {
     folder,
   };
 };
+
+export default useFolder;

@@ -1,8 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import EditorJS from "@editorjs/editorjs";
-const RichEditor = () => {
-  const [editor, setEditor] = useState<EditorJS | null>(null);
+import useFolder from "../../../hooks/useFolder";
+
+interface Props {
+  fileName: string | undefined;
+}
+
+const RichEditor = ({ fileName }: Props) => {
   const isReady = useRef(false);
+  const { getJournalEntry, updateJournalEntry } = useFolder();
 
   useEffect(() => {
     if (!isReady.current) {
@@ -10,44 +17,52 @@ const RichEditor = () => {
       const List = require("@editorjs/list");
       const Underline = require("@editorjs/underline");
       const CodeTool = require("@editorjs/code");
+      const data = getJournalEntry(fileName);
 
-      setEditor(
-        new EditorJS({
-          placeholder: "Hello there!",
-          holder: "editorjs",
-          tools: {
-            header: {
-              class: Header,
-              shortcut: "CTRL+H",
-              config: {
-                placeholder: "Enter a header",
-                levels: [1, 2, 3]
-              },
+      const editor = new EditorJS({
+        placeholder: "Hello there!",
+        holder: "editorjs",
+        tools: {
+          header: {
+            class: Header,
+            shortcut: "CTRL+H",
+            config: {
+              placeholder: "Enter a header",
+              levels: [1, 2, 3],
             },
-            list: {
-              class: List,
-              inlineToolbar: true,
-              shortcut: "CTRL+L",
-              config: {
-                defaultStyle: "unordered",
-              },
-            },
-            underline: Underline,
-            code: {
-                class: CodeTool,
-                inlineToolbar: true,
-                shortcut: "CTRL+SHIFT+C",
-            }
           },
-        })
-      );
+          list: {
+            class: List,
+            inlineToolbar: true,
+            shortcut: "CTRL+L",
+            config: {
+              defaultStyle: "unordered",
+            },
+          },
+          underline: Underline,
+          code: {
+            class: CodeTool,
+            inlineToolbar: true,
+            shortcut: "CTRL+SHIFT+C",
+          },
+        },
+        data: data,
+        async onChange(api, event) {
+          console.log("changed", editor);
+          editor.save().then((data) => {
+            console.log(data);
+            updateJournalEntry(fileName, JSON.stringify(data));
+          });
+        },
+      });
+
       isReady.current = true;
     }
   }, []);
 
   return (
-    <article className="prose">
-      <div id="editorjs"></div>
+    <article className="prose w-full mt-4">
+      <div id="editorjs" className="rounded-xl border-2 border-gray-100 shadow-md p-5 hover:border-gray-200 hover:shadow-sm hover:shadow-gray-200 transition-all duration-200" />
     </article>
   );
 };
