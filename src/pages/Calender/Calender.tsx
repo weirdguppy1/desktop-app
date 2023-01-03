@@ -1,4 +1,8 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  FaceFrownIcon,
+} from "@heroicons/react/24/solid";
 import {
   add,
   eachDayOfInterval,
@@ -12,80 +16,46 @@ import {
   parse,
   parseISO,
   startOfToday,
-} from 'date-fns'
-import { Fragment, useState } from 'react'
-
-const meetings = [
-  {
-    id: 1,
-    name: 'Leslie Alexander',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2022-05-11T13:00',
-    endDatetime: '2022-05-11T14:30',
-  },
-  {
-    id: 2,
-    name: 'Michael Foster',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2022-05-20T09:00',
-    endDatetime: '2022-05-20T11:30',
-  },
-  {
-    id: 3,
-    name: 'Dries Vincent',
-    imageUrl:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2022-05-20T17:00',
-    endDatetime: '2022-05-20T18:30',
-  },
-  {
-    id: 4,
-    name: 'Leslie Alexander',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2022-06-09T13:00',
-    endDatetime: '2022-06-09T14:30',
-  },
-  {
-    id: 5,
-    name: 'Michael Foster',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2022-05-13T14:00',
-    endDatetime: '2022-05-13T14:30',
-  },
-]
+} from "date-fns";
+import { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import useFolder from "../../hooks/useFolder";
 
 function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Calender() {
-  let today = startOfToday()
-  let [selectedDay, setSelectedDay] = useState(today)
-  let [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'))
-  let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
+  let today = startOfToday();
+  let [selectedDay, setSelectedDay] = useState(today);
+  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+
+  const [entries, setEntries] = useState<any[]>([]);
+  const { getJournalEntries } = useFolder();
+
+  useEffect(() => {
+    setEntries(getJournalEntries());
+  }, []);
 
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
-  })
+  });
 
   function previousMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
+    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
   function nextMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
-  let selectedDayMeetings = meetings.filter((meeting) =>
-    isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  )
+  let selectedDayEntries = entries.filter((entry) => {
+    return isSameDay(parseISO(entry.startDatetime), selectedDay);
+  });
 
   return (
     <div className="pt-16">
@@ -94,7 +64,7 @@ export default function Calender() {
           <div className="md:pr-14">
             <div className="flex items-center">
               <h2 className="flex-auto font-semibold text-gray-900">
-                {format(firstDayCurrentMonth, 'MMMM yyyy')}
+                {format(firstDayCurrentMonth, "MMMM yyyy")}
               </h2>
               <button
                 type="button"
@@ -128,43 +98,46 @@ export default function Calender() {
                   key={day.toString()}
                   className={classNames(
                     dayIdx === 0 && colStartClasses[getDay(day)],
-                    'py-1.5'
+                    "py-1.5"
                   )}
                 >
                   <button
                     type="button"
                     onClick={() => setSelectedDay(day)}
                     className={classNames(
-                      isEqual(day, selectedDay) && 'text-white',
+                      isEqual(day, selectedDay) && "text-white",
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
-                        'text-red-500',
+                        "text-cyan-500",
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
-                        'text-gray-900',
+                        "text-gray-900",
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
-                        'text-gray-400',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
+                        "text-gray-400",
+                      isEqual(day, selectedDay) &&
+                        isToday(day) &&
+                        "bg-cyan-500",
                       isEqual(day, selectedDay) &&
                         !isToday(day) &&
-                        'bg-gray-900',
-                      !isEqual(day, selectedDay) && 'hover:bg-gray-200',
+                        "bg-gray-900",
+                      !isEqual(day, selectedDay) &&
+                        "hover:bg-gray-200 transition-all duration-200",
                       (isEqual(day, selectedDay) || isToday(day)) &&
-                        'font-semibold',
-                      'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
+                        "font-bold",
+                      "mx-auto flex h-8 w-8 items-center justify-center rounded-md"
                     )}
                   >
-                    <time dateTime={format(day, 'yyyy-MM-dd')}>
-                      {format(day, 'd')}
+                    <time dateTime={format(day, "yyyy-MM-dd")}>
+                      {format(day, "d")}
                     </time>
                   </button>
 
                   <div className="w-1 h-1 mx-auto mt-1">
-                    {meetings.some((meeting) =>
-                      isSameDay(parseISO(meeting.startDatetime), day)
+                    {entries.some((entry) =>
+                      isSameDay(parseISO(entry.startDatetime), day)
                     ) && (
                       <div className="w-1 h-1 rounded-full bg-sky-500"></div>
                     )}
@@ -175,34 +148,55 @@ export default function Calender() {
           </div>
           <section className="mt-12 md:mt-0 md:pl-14">
             <h2 className="font-semibold text-gray-900">
-              Schedule for{' '}
-              <time dateTime={format(selectedDay, 'yyyy-MM-dd')}>
-                {format(selectedDay, 'MMM dd, yyy')}
+              Journal Entries for{" "}
+              <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
+                {format(selectedDay, "MMM dd, yyy")}
               </time>
             </h2>
             <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-              {selectedDayMeetings.length > 0 ? (
-                selectedDayMeetings.map((meeting) => (
-                  <h1>{meeting.name}</h1>
-                ))
+              {selectedDayEntries.length > 0 ? (
+                <div className="flex flex-col space-y-1.5 p-2">
+                  {selectedDayEntries.map((entry) => (
+                    <Entry fileName={entry.fileName} id={entry.id} />
+                  ))}
+                </div>
               ) : (
-                <p>No meetings for today.</p>
+                <div className="flex items-center space-x-2">
+                  <p>No entries written</p>{" "}
+                  <FaceFrownIcon className="h-6 w-6 text-cyan-500" />
+                </div>
               )}
             </ol>
           </section>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
+interface EntryProps {
+  id: string;
+  fileName: string;
+}
+
+const Entry = ({ id, fileName }: EntryProps) => {
+  return (
+    <Link
+      to={`/editor/${fileName}`}
+      key={id}
+      className="w-full bg-cyan-500 hover:cursor-pointer rounded-lg px-4 py-2 text-white hover:shadow-lg hover:shadow-cyan-300 tranistion duration-200"
+    >
+      {id}
+    </Link>
+  );
+};
+
 let colStartClasses = [
-    '',
-    'col-start-2',
-    'col-start-3',
-    'col-start-4',
-    'col-start-5',
-    'col-start-6',
-    'col-start-7',
-  ]
-  
+  "",
+  "col-start-2",
+  "col-start-3",
+  "col-start-4",
+  "col-start-5",
+  "col-start-6",
+  "col-start-7",
+];

@@ -12,6 +12,7 @@ Journal created with Electron, Vite, Tailwind, and React.
 - Open source?
 - Prompts 
 - Dark Mode
+- AI Helper
 
 ### Goals
 

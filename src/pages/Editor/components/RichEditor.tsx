@@ -55,76 +55,21 @@ const RichEditor = ({ fileName }: Props) => {
           });
         },
       });
-
+      
       isReady.current = true;
+
     }
   }, []);
 
   return (
     <article className="prose w-full mt-4">
-      <div id="editorjs" className="rounded-xl border-2 border-gray-100 shadow-md p-5 hover:border-gray-200 hover:shadow-sm hover:shadow-gray-200 transition-all duration-200" />
+      <div id="editorjs" className="" />
     </article>
   );
 };
 
 export default RichEditor;
 
-// import React, { useState } from "react";
-// import { createEditor } from "slate";
-// import { Slate, Editable, withReact } from "slate-react";
-// // TS
-// import { BaseEditor, Descendant } from "slate";
-// import { ReactEditor } from "slate-react";
-
-// type CustomElement = { type: "paragraph"; children: CustomText[] };
-// type CustomText = { text: string };
-
-// declare module "slate" {
-//   interface CustomTypes {
-//     Editor: BaseEditor & ReactEditor;
-//     Element: CustomElement;
-//     Text: CustomText;
-//   }
-// }
-
-// const initialValue = [
-//   { type: "paragraph", children: [{ text: "A line of text in a paragrah." }] },
-// ];
-// const RichEditor = () => {
-//   const [editor] = useState(() => withReact(createEditor()));
-//   const [value, setValue] = useState<Descendant[]>([
-//     {
-//       type: "paragraph",
-//       children: [{ text: "A line of text in a paragrah." }],
-//     },
-//   ]);
-
-//   const renderElement = useCallback((props) => {
-//     switch (props.element.type) {
-//       case "code":
-//         return <CodeElement {...props} />;
-//       default:
-//         return <DefaultElement {...props} />;
-//     }
-//   }, []);
-
-//   return (
-//     <Slate editor={editor} value={value}>
-//       {" "}
-//       <Editable />
-//     </Slate>
-//   );
-// };
-
-// export default RichEditor;
-
-// const CodeElement = (props: any) => {
-//   return (
-//     <pre {...props.attributes}>
-//       <code>{props.children}</code>
-//     </pre>
-//   );
-// };
 
 // const DefaultElement = (props: any) => {
 //   return <p {...props.attributes}>{props.children}</p>;

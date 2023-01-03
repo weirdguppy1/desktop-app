@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
+import { format } from "date-fns";
 
 // const error = (error: string) => `Error! ${error}.`;
 
@@ -13,8 +14,15 @@ const useFolder = () => {
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
 
+    const nanoid = customAlphabet(
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
+      8
+    );
     const id = nanoid();
-    const formattedDate = date.toISOString().slice(0, 10);
+    const formattedDate = format(date, "yyyy-M-dd");
+
+    console.log(formattedDate)
+
     const fileName = `${folder}/${formattedDate}_${id}.json`;
 
     const defaultData = {
@@ -32,11 +40,9 @@ const useFolder = () => {
     if (!folderExists()) return;
     if (fileName === undefined) return;
 
-    console.log(content)
+    console.log(content);
 
-    fs.writeFile(`${folder}/${fileName}`, content, (err) => {
-
-    });
+    fs.writeFile(`${folder}/${fileName}`, content, (err) => {});
   };
 
   const getJournalEntry = (fileName: string | undefined) => {
@@ -47,10 +53,52 @@ const useFolder = () => {
     console.log(data);
     return JSON.parse(data);
   };
+
+  const getJournalEntries = () => {
+    if (!folderExists()) return [];
+
+    const files = fs.readdirSync(folder);
+    const res: any[] = [];
+
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    files.forEach((value, index) => {
+      const parsed = value.split("_");
+      const dateParsed = parsed[0].split("-");
+
+      const formatted = {
+        date: parsed[0],
+        startDatetime: `${parsed[0]}T23:59`,
+        id: parsed[1].replace(".json", ""),
+        fileName: value,
+        readableDate: `${months[Number(dateParsed[1])]} ${dateParsed[2]}, ${
+          dateParsed[0]
+        }`,
+      };
+      res[index] = formatted;
+    });
+    console.log(res);
+    return res;
+  };
+
   return {
     createJournalEntry,
     updateJournalEntry,
     getJournalEntry,
+    getJournalEntries,
     folder,
   };
 };

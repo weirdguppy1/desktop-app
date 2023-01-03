@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import useFolder from "../../hooks/useFolder";
+import Test from "../Editor/components/Test";
 
 export default function Home() {
   const { createJournalEntry } = useFolder();
@@ -12,9 +13,12 @@ export default function Home() {
     navigate(`/editor/${fileName}`)
   };
 
+
+
   return (
     <div className="">
       {/* <button onClick={handleClick} className="btn-cosmic btn">Create New Entry</button> */}
+      {/* <Test /> */}
     </div>
   );
 }

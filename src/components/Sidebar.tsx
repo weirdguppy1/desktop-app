@@ -31,6 +31,7 @@ const SideBar = () => {
   const { createJournalEntry } = useFolder();
   const handleCreateJournalEntry = () => {
     const fileName = createJournalEntry(new Date());
+    console.log(new Date())
     navigate(`/editor/${fileName}`);
   };
 
@@ -57,7 +58,7 @@ const SideBar = () => {
       />
       <SideBarIcon
         to="/profile"
-        text="User"
+        text="Profile"
         icon={<UserCircleIcon className="h-12 w-12" />}
       />
     </div>
