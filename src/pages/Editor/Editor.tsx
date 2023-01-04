@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import RichEditor from "./components/RichEditor";
 import { useParams } from "react-router-dom";
+import Test from "./components/Test";
 
 export default function Editor() {
   const months = [
@@ -43,10 +44,10 @@ export default function Editor() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-4xl font-bold items-center">{formattedDate}</h1>
-      <label className="text-white bg-black px-4 text-xs mt-2 rounded-full">{fileName?.replace(".json", "").split("_")[1]}</label>
+      {/* <label className="text-white bg-black px-4 text-xs mt-2 rounded-full">{fileName?.replace(".html", "").split("_")[1]}</label> */}
       {/* <button className="">Exit</button> */}
       {/* <textarea className="text-xl w-full resize-none focus:outline-none border-2" /> */}
-      <RichEditor fileName={fileName} />
+      <Test fileName={fileName} />
     </div>
   );
 }

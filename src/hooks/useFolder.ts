@@ -10,6 +10,7 @@ import { format } from "date-fns";
 const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
   const folderExists = () => fs.existsSync(folder);
+  const fileEnding = "html";
 
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
@@ -21,16 +22,16 @@ const useFolder = () => {
     const id = nanoid();
     const formattedDate = format(date, "yyyy-M-dd");
 
-    console.log(formattedDate)
+    console.log(formattedDate);
 
-    const fileName = `${folder}/${formattedDate}_${id}.json`;
+    const fileName = `${folder}/${formattedDate}_${id}.${fileEnding}`;
 
     const defaultData = {
       blocks: [],
     };
 
     fs.writeFileSync(fileName, JSON.stringify(defaultData));
-    return `${formattedDate}_${id}.json`;
+    return `${formattedDate}_${id}.${fileEnding}`;
   };
 
   const updateJournalEntry = (
@@ -46,12 +47,11 @@ const useFolder = () => {
   };
 
   const getJournalEntry = (fileName: string | undefined) => {
-    if (!folderExists()) return;
-    if (fileName === undefined) return {};
+    if (!folderExists() && fileName === undefined) return;
 
     const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
     console.log(data);
-    return JSON.parse(data);
+    return data;
   };
 
   const getJournalEntries = () => {
@@ -81,10 +81,14 @@ const useFolder = () => {
 
       const formatted = {
         date: parsed[0],
-        startDatetime: `${parsed[0]}T23:59`,
-        id: parsed[1].replace(".json", ""),
+        startDatetime: new Date(
+          Number(dateParsed[0]),
+          Number(dateParsed[1]) - 1,
+          Number(dateParsed[2])
+        ),
+        id: parsed[1].replace(`.${fileEnding}`, ""),
         fileName: value,
-        readableDate: `${months[Number(dateParsed[1])]} ${dateParsed[2]}, ${
+        readableDate: `${months[Number(dateParsed[1]) - 1]} ${dateParsed[2]}, ${
           dateParsed[0]
         }`,
       };

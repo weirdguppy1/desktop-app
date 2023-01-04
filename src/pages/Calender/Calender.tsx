@@ -9,12 +9,13 @@ import {
   endOfMonth,
   format,
   getDay,
+  isAfter,
+  isBefore,
   isEqual,
   isSameDay,
   isSameMonth,
   isToday,
   parse,
-  parseISO,
   startOfToday,
 } from "date-fns";
 import { Fragment, useEffect, useState } from "react";
@@ -31,8 +32,8 @@ export default function Calender() {
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
   let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
-  const [entries, setEntries] = useState<any[]>([]);
   const { getJournalEntries } = useFolder();
+  const [entries, setEntries] = useState<any[]>([]);
 
   useEffect(() => {
     setEntries(getJournalEntries());
@@ -53,9 +54,9 @@ export default function Calender() {
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
-  let selectedDayEntries = entries.filter((entry) => {
-    return isSameDay(parseISO(entry.startDatetime), selectedDay);
-  });
+  let selectedDayEntries = entries.filter((entry) =>
+    isSameDay(entry.startDatetime, selectedDay)
+  );
 
   return (
     <div className="pt-16">
@@ -127,6 +128,7 @@ export default function Calender() {
                         "hover:bg-gray-200 transition-all duration-200",
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         "font-bold",
+                      isAfter(day, today) && "text-gray-300",
                       "mx-auto flex h-8 w-8 items-center justify-center rounded-md"
                     )}
                   >
@@ -137,7 +139,7 @@ export default function Calender() {
 
                   <div className="w-1 h-1 mx-auto mt-1">
                     {entries.some((entry) =>
-                      isSameDay(parseISO(entry.startDatetime), day)
+                      isSameDay(entry.startDatetime, day)
                     ) && (
                       <div className="w-1 h-1 rounded-full bg-sky-500"></div>
                     )}
