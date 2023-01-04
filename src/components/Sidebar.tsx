@@ -31,7 +31,6 @@ const SideBar = () => {
   const { createJournalEntry } = useFolder();
   const handleCreateJournalEntry = () => {
     const fileName = createJournalEntry(new Date());
-    console.log(new Date())
     navigate(`/editor/${fileName}`);
   };
 
