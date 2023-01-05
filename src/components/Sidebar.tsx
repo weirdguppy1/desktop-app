@@ -3,6 +3,7 @@ import {
   Cog8ToothIcon,
   CalendarDaysIcon,
   PlusIcon,
+  HomeIcon,
 } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import useFolder from "../hooks/useFolder";
@@ -35,7 +36,8 @@ const SideBar = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen w-16 flex flex-col bg-white border-r-2 border-gray-200 shadow-lg">
+    <div className="fixed top-0 left-0 h-screen w-16 flex flex-col bg-gray-900 border-r-2 border-gray-200 shadow-lg">
+      <SideBarIcon to="/" text="Home" icon={<HomeIcon />} />
       <div onClick={handleCreateJournalEntry}>
         <div className="sidebar-icon group">
           <PlusIcon className="h-12 w-12" />

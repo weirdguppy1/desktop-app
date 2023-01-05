@@ -159,7 +159,7 @@ export default function Calender() {
               {selectedDayEntries.length > 0 ? (
                 <div className="flex flex-col space-y-1.5 p-2">
                   {selectedDayEntries.map((entry) => (
-                    <Entry fileName={entry.fileName} id={entry.id} />
+                    <Entry fileName={entry.fileName} title={entry.title} id={entry.id} />
                   ))}
                 </div>
               ) : (
@@ -179,16 +179,18 @@ export default function Calender() {
 interface EntryProps {
   id: string;
   fileName: string;
+  title: string | null;
 }
 
-const Entry = ({ id, fileName }: EntryProps) => {
+const Entry = ({ id, fileName, title }: EntryProps) => {
   return (
     <Link
       to={`/editor/${fileName}`}
       key={id}
-      className="w-full bg-cyan-500 hover:cursor-pointer rounded-lg px-4 py-2 text-white hover:shadow-lg hover:shadow-cyan-300 tranistion duration-200"
+      className="w-full bg-gradient-to-r from-cyan-500 bg-cyan-400 hover:cursor-pointer rounded-lg px-4 py-2 text-white hover:shadow-lg hover:shadow-cyan-300 tranistion duration-200"
     >
-      {id}
+      <h1 className="text-2xl transition-all duration-200 hover:text-3xl">{!title ? "No title." : title}</h1>
+      <p className="text-xs">{id}</p>
     </Link>
   );
 };

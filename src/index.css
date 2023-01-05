@@ -55,6 +55,13 @@
     transition-all duration-200 scale-0 origin-left;
   }
 
+  .tooltip-top {
+    @apply absolute w-auto p-3 m-2 min-w-max left-14 rounded-2xl shadow-md
+    text-white bg-gray-900 
+    text-xs font-bold 
+    transition-all duration-200 scale-0 origin-top;
+  }
+
   .sidebar-hr {
     @apply bg-gray-200 dark:bg-gray-800 
     border border-gray-200 dark:border-gray-800 rounded-full
@@ -65,4 +72,13 @@
   .ce-inline-tool {
     @apply btn;
   } */
+}
+
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
 }

@@ -8,7 +8,7 @@ Journal created with Electron, Vite, Tailwind, and React.
 - Online backups
 - Simplistic, Modern, Beautiful design
 - Prompts/suggestions for writing 
-- Password protection 
+- Password protection   
 - Open source?
 - Prompts 
 - Dark Mode

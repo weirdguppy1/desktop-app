@@ -10,7 +10,7 @@ import { format } from "date-fns";
 const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
   const folderExists = () => fs.existsSync(folder);
-  const fileEnding = "html";
+  const fileEnding = "txt";
 
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
@@ -26,11 +26,9 @@ const useFolder = () => {
 
     const fileName = `${folder}/${formattedDate}_${id}.${fileEnding}`;
 
-    const defaultData = {
-      blocks: [],
-    };
+    const defaultData = ""
 
-    fs.writeFileSync(fileName, JSON.stringify(defaultData));
+    fs.writeFileSync(fileName, defaultData);
     return `${formattedDate}_${id}.${fileEnding}`;
   };
 
@@ -78,7 +76,9 @@ const useFolder = () => {
     files.forEach((value, index) => {
       const parsed = value.split("_");
       const dateParsed = parsed[0].split("-");
-
+      const doc = new DOMParser().parseFromString(fs.readFileSync(`${folder}/${value}`, "utf-8"), 'text/html')
+      const h1s = doc.getElementsByTagName("h1")
+    
       const formatted = {
         date: parsed[0],
         startDatetime: new Date(
@@ -91,6 +91,7 @@ const useFolder = () => {
         readableDate: `${months[Number(dateParsed[1]) - 1]} ${dateParsed[2]}, ${
           dateParsed[0]
         }`,
+        title: h1s.length > 0 ? h1s[0].textContent : ""
       };
       res[index] = formatted;
     });

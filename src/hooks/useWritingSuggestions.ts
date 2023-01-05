@@ -2,7 +2,7 @@ import prompts from "./prompts.json";
 // @feature-idea ai funtionality to generate personal prompts!
 
 const useWritingSuggestions = () => {
-  const suggestions = prompts.promps;
+  const suggestions = prompts.prompts;
   const random = () =>
     suggestions[Math.floor(Math.random() * suggestions.length)];
   return { random };

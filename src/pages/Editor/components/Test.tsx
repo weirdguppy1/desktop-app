@@ -3,10 +3,12 @@ import {
   CodeBracketSquareIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/solid";
+import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, generateHTML, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React, { useEffect, useMemo, useState } from "react";
 import useFolder from "../../../hooks/useFolder";
+import useWritingSuggestions from "../../../hooks/useWritingSuggestions";
 
 const MenuBar = ({ editor }: any) => {
   if (!editor) {
@@ -189,25 +191,26 @@ interface EditorProps {
 }
 
 export default ({ fileName }: EditorProps) => {
-  const [content, setContent] = useState<string | undefined>();
-
   const { getJournalEntry, updateJournalEntry } = useFolder();
-
-  useEffect(() => {
-    setContent(getJournalEntry(fileName));
-  }, []);
+  const { random } = useWritingSuggestions();
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: random(),
+      }),
+    ],
     content: getJournalEntry(fileName),
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       console.log(fileName);
       updateJournalEntry(fileName, html);
     },
+
     editorProps: {
       attributes: {
-        class: "prose p-4 border-2 border-black min-w-xl focus:outline",
+        class: "prose h-full min-w-xl focus:outline-none",
       },
     },
   });
