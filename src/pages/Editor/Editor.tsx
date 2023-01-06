@@ -42,7 +42,7 @@ export default function Editor() {
   // }, []);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full mt-8">
       <h1 className="text-4xl font-bold items-center">{formattedDate}</h1>
       <label className="text-white bg-black px-4 text-xs mt-2 rounded-full">{fileName?.split("_")[1]}</label>
       {/* <button className="">Exit</button> */}

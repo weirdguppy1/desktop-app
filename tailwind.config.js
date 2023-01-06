@@ -13,6 +13,13 @@ module.exports = {
         "pos-0": "0% 0%",
         "pos-100": "100% 100%",
       },
+
+      animation: {
+        gradientChange: "gradientChange 1s infinite"
+      },
+      keyframes: {
+        
+      }
     },
   },
   plugins: [require("@tailwindcss/typography")],

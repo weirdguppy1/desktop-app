@@ -16,8 +16,9 @@ function App() {
   return (
     <HashRouter>
       <Layout>
-        <SideBar />
         <Toaster />
+        {/* <SideBar /> */}
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/calender" element={<Calender />} />

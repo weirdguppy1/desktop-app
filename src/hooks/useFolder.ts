@@ -11,6 +11,7 @@ const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
   const folderExists = () => fs.existsSync(folder);
   const fileEnding = "txt";
+  const fileNameRegex = /\d\d\d\d-(\d)?\d-\d\d_[a-zA-Z0-9]*/
 
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
@@ -95,7 +96,6 @@ const useFolder = () => {
       };
       res[index] = formatted;
     });
-    console.log(res);
     return res;
   };
 
@@ -105,6 +105,9 @@ const useFolder = () => {
     getJournalEntry,
     getJournalEntries,
     folder,
+    fileNameRegex,
+    fileEnding,
+    folderExists
   };
 };
 

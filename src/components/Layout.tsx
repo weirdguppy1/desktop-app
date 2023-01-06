@@ -1,4 +1,5 @@
 import React from "react";
+import SideBar from "./Sidebar";
 
 interface Props {
   children: React.ReactNode;
@@ -6,8 +7,9 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="font-satoshi">
-      <div className="p-4">{children}</div>
+    <div className="font-satoshi flex">
+      <SideBar />
+      {children}
     </div>
   );
 }
