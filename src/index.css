@@ -31,7 +31,7 @@
   }
 
   .btn-cosmic {
-    @apply text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-purple-500 via-green-500 to-purple-700 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:shadow-lg hover:shadow-purple-300 focus:ring-purple-300;
+    @apply text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-cyan-500 via-purple-500 to-cyan-500 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:shadow-lg hover:shadow-purple-300 focus:ring-purple-300;
   }
 
   .is-active {
@@ -66,6 +66,10 @@
     @apply bg-gray-200 dark:bg-gray-800 
     border border-gray-200 dark:border-gray-800 rounded-full
     mx-2;
+  }
+
+  .input {
+    @apply border-2 border-gray-200 rounded-lg px-4 py-2 transition duration-100 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:shadow-md 
   }
 
   /* 

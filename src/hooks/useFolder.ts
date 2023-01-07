@@ -2,7 +2,8 @@ import fs from "fs";
 import path from "path";
 import { customAlphabet } from "nanoid";
 import { format } from "date-fns";
-
+import toast from "react-hot-toast";
+import { FaceFrownIcon } from "@heroicons/react/24/solid" 
 // const error = (error: string) => `Error! ${error}.`;
 
 // TO:DO Use try-catch to catch errors for synchronous functions!!!!
@@ -11,7 +12,7 @@ const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
   const folderExists = () => fs.existsSync(folder);
   const fileEnding = "txt";
-  const fileNameRegex = /\d\d\d\d-(\d)?\d-\d\d_[a-zA-Z0-9]*/
+  const fileNameRegex = /\d\d\d\d-(\d)?\d-\d\d_[a-zA-Z0-9]*/;
 
   const createJournalEntry = (date: Date) => {
     if (!folderExists()) return;
@@ -27,7 +28,7 @@ const useFolder = () => {
 
     const fileName = `${folder}/${formattedDate}_${id}.${fileEnding}`;
 
-    const defaultData = ""
+    const defaultData = "";
 
     fs.writeFileSync(fileName, defaultData);
     return `${formattedDate}_${id}.${fileEnding}`;
@@ -49,7 +50,6 @@ const useFolder = () => {
     if (!folderExists() && fileName === undefined) return;
 
     const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
-    console.log(data);
     return data;
   };
 
@@ -74,12 +74,16 @@ const useFolder = () => {
       "December",
     ];
 
-    files.forEach((value, index) => {
-      const parsed = value.split("_");
+    files.forEach((fileName, index) => {
+      const parsed = fileName.split("_");
       const dateParsed = parsed[0].split("-");
-      const doc = new DOMParser().parseFromString(fs.readFileSync(`${folder}/${value}`, "utf-8"), 'text/html')
-      const h1s = doc.getElementsByTagName("h1")
-    
+      const content = fs.readFileSync(`${folder}/${fileName}`);
+      const doc = new DOMParser().parseFromString(
+        fs.readFileSync(`${folder}/${fileName}`, "utf-8"),
+        "text/html"
+      );
+      const h1s = doc.getElementsByTagName("h1");
+
       const formatted = {
         date: parsed[0],
         startDatetime: new Date(
@@ -88,15 +92,28 @@ const useFolder = () => {
           Number(dateParsed[2])
         ),
         id: parsed[1].replace(`.${fileEnding}`, ""),
-        fileName: value,
+        fileName: fileName,
         readableDate: `${months[Number(dateParsed[1]) - 1]} ${dateParsed[2]}, ${
           dateParsed[0]
         }`,
-        title: h1s.length > 0 ? h1s[0].textContent : ""
+        title: h1s.length > 0 ? h1s[0].textContent : "",
+        content: content,
       };
       res[index] = formatted;
     });
     return res;
+  };
+
+  const searchJournalEntries = (search: string) => {
+    const re = new RegExp(search);
+    const entries = getJournalEntries();
+    const results = entries.filter((entry) =>
+      entry.content?.toString().concat(entry.readableDate).toLowerCase().includes(search.toLowerCase())
+    );
+    // if(results === []) toast("No results.", {
+    //   icon: "😭"
+    // })
+    return results;
   };
 
   return {
@@ -104,10 +121,11 @@ const useFolder = () => {
     updateJournalEntry,
     getJournalEntry,
     getJournalEntries,
+    folderExists,
+    searchJournalEntries,
     folder,
     fileNameRegex,
     fileEnding,
-    folderExists
   };
 };
 

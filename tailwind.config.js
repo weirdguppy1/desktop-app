@@ -6,6 +6,20 @@ module.exports = {
       fontFamily: {
         satoshi: ["Satoshi"],
       },
+      fontSize: {
+        xxs: [
+          "0.65rem",
+          {
+            lineHeight: "1rem",
+          },
+        ],
+        xxxs: [
+          "0.55rem",
+          {
+            lineHeight: "1rem",
+          },
+        ],
+      },
       backgroundSize: {
         "size-200": "200% 200%",
       },
@@ -15,11 +29,9 @@ module.exports = {
       },
 
       animation: {
-        gradientChange: "gradientChange 1s infinite"
+        gradientChange: "gradientChange 1s infinite",
       },
-      keyframes: {
-        
-      }
+      keyframes: {},
     },
   },
   plugins: [require("@tailwindcss/typography")],

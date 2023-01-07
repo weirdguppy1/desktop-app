@@ -11,6 +11,8 @@ const useStatistics = () => {
 
   const getCurrentStreak = () => {
     const dates: Date[] = getJournalEntries().map((a) => a.startDatetime);
+    if (dates.length === 0) return 0;
+
     const sorted = dates
       .sort(function (a, b) {
         return a.getTime() - b.getTime();
@@ -19,7 +21,8 @@ const useStatistics = () => {
     let streak = 1;
 
     const today = new Date();
-    if (!isSameDay(sorted[0], today)) return 0;
+    if (Math.abs(differenceInDays(sorted[0], today)) === 2) return 0;
+
     for (let i = 0; i < sorted.length - 1; i++) {
       if (Math.abs(differenceInDays(sorted[i], sorted[i + 1])) === 1) {
         streak++;
@@ -33,8 +36,8 @@ const useStatistics = () => {
   const getJournalEntryCount = () => {
     if (!folderExists()) return;
     const files = fs.readdirSync(folder).filter((item) => {
-      const replaced = item.replace(`.${fileEnding}`, "")
-      console.log()
+      const replaced = item.replace(`.${fileEnding}`, "");
+      console.log();
       return fileNameRegex.exec(replaced);
     });
     return files.length;
