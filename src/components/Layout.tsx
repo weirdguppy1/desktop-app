@@ -1,4 +1,5 @@
 import React from "react";
+import ReminderNotification from "./ReminderNotification";
 import SideBar from "./Sidebar";
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 export default function Layout({ children }: Props) {
   return (
     <div className="font-satoshi flex">
+      <ReminderNotification />
       <SideBar />
       {children}
     </div>

@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { customAlphabet } from "nanoid";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import toast from "react-hot-toast";
-import { FaceFrownIcon } from "@heroicons/react/24/solid" 
+import { FaceFrownIcon } from "@heroicons/react/24/solid";
 // const error = (error: string) => `Error! ${error}.`;
 
 // TO:DO Use try-catch to catch errors for synchronous functions!!!!
@@ -105,15 +105,34 @@ const useFolder = () => {
   };
 
   const searchJournalEntries = (search: string) => {
-    const re = new RegExp(search);
     const entries = getJournalEntries();
     const results = entries.filter((entry) =>
-      entry.content?.toString().concat(entry.readableDate).toLowerCase().includes(search.toLowerCase())
+      entry.content
+        ?.toString()
+        .concat(entry.readableDate)
+        .toLowerCase()
+        .includes(search.toLowerCase())
     );
     // if(results === []) toast("No results.", {
     //   icon: "😭"
     // })
     return results;
+  };
+
+  const hasWrittenToday = () => {
+    const files = fs.readdirSync(folder);
+    files.sort((a, b) => a.localeCompare(b));
+    
+    const parsed = files[files.length - 1].split("_");
+    const dateParsed = parsed[0].split("-");
+    return isSameDay(
+      new Date(
+        Number(dateParsed[0]),
+        Number(dateParsed[1]) - 1,
+        Number(dateParsed[2])
+      ),
+      new Date()
+    );
   };
 
   return {
@@ -126,6 +145,7 @@ const useFolder = () => {
     folder,
     fileNameRegex,
     fileEnding,
+    hasWrittenToday,
   };
 };
 
