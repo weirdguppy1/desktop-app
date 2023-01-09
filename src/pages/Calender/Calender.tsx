@@ -20,6 +20,7 @@ import {
 } from "date-fns";
 import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Card from "../../components/Card";
 import useFolder from "../../hooks/useFolder";
 
 function classNames(...classes: any[]) {
@@ -191,14 +192,15 @@ interface EntryProps {
 
 const Entry = ({ id, fileName, title }: EntryProps) => {
   return (
-    <Link
-      to={`/editor/${fileName}`}
-      className="w-full bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 hover:cursor-pointer rounded-lg px-4 py-2 text-white hover:shadow-lg  tranistion-all duration-200"
-    >
-      <h1 className="text-2xl transition-all duration-200">
-        {!title ? "No title." : title}
-      </h1>
-      <p className="text-xs">{id}</p>
+    <Link key={id} to={`/editor/${fileName}`}>
+      <Card>
+        <h1 className="text-2xl">
+          {title === "" ? "No title." : title}
+        </h1>
+        <label className="rounded-full py-0.5 px-4 bg-gray-600 text-xxs">
+          {id}
+        </label>
+      </Card>
     </Link>
   );
 };

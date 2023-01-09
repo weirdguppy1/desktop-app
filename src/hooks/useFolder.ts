@@ -3,7 +3,18 @@ import path from "path";
 import { customAlphabet } from "nanoid";
 import { format, isSameDay } from "date-fns";
 import toast from "react-hot-toast";
-import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import Store from "electron-store";
+
+type StoreType = {
+  openHistory: string[];
+};
+
+const store = new Store<StoreType>({
+  defaults: {
+    openHistory: [],
+  },
+});
+
 // const error = (error: string) => `Error! ${error}.`;
 
 // TO:DO Use try-catch to catch errors for synchronous functions!!!!
@@ -49,14 +60,16 @@ const useFolder = () => {
   const getJournalEntry = (fileName: string | undefined) => {
     if (!folderExists() && fileName === undefined) return;
 
+    store.set("openHistory", [fileName, ...store.get("openHistory")]);
+
     const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
     return data;
   };
 
-  const getJournalEntries = () => {
+  const getJournalEntries = (entries?: string[]) => {
     if (!folderExists()) return [];
 
-    const files = fs.readdirSync(folder);
+    const files = entries ? entries : fs.readdirSync(folder);
     const res: any[] = [];
 
     const months = [
@@ -113,16 +126,13 @@ const useFolder = () => {
         .toLowerCase()
         .includes(search.toLowerCase())
     );
-    // if(results === []) toast("No results.", {
-    //   icon: "😭"
-    // })
     return results;
   };
 
   const hasWrittenToday = () => {
     const files = fs.readdirSync(folder);
     files.sort((a, b) => a.localeCompare(b));
-    
+
     const parsed = files[files.length - 1].split("_");
     const dateParsed = parsed[0].split("-");
     return isSameDay(
@@ -135,6 +145,10 @@ const useFolder = () => {
     );
   };
 
+  const getRecentEntries = () => {
+    return getJournalEntries(store.get("openHistory"));
+  };
+
   return {
     createJournalEntry,
     updateJournalEntry,
@@ -142,10 +156,11 @@ const useFolder = () => {
     getJournalEntries,
     folderExists,
     searchJournalEntries,
+    getRecentEntries,
+    hasWrittenToday,
     folder,
     fileNameRegex,
     fileEnding,
-    hasWrittenToday,
   };
 };
 

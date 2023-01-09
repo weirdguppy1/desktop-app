@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import useFolder from "../../hooks/useFolder";
 import useStatistics from "../../hooks/useStatistics";
-import Card from "./components/Card";
+import Card from "../../components/Card";
 import Search from "./components/Search";
+import Recent from "./components/Recent";
 
 export default function Home() {
   const { getCurrentStreak, getJournalEntryCount } = useStatistics();
@@ -23,7 +24,7 @@ export default function Home() {
   const entriesCount = getJournalEntryCount();
 
   return (
-    <div className="w-full p-10">
+    <div className="w-full p-10 item flex flex-col items-center">
       <div className="flex flex-col space-y-16">
         <div>
           <h1 className="text-8xl">
@@ -67,6 +68,7 @@ export default function Home() {
           </Card>
         </div>
         <div className="flex-col">
+          <Recent />
           <Search />
         </div>
       </div>

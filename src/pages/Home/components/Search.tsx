@@ -1,12 +1,12 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useFolder from "../../../hooks/useFolder";
-import Card from "./Card";
+import Card from "../../../components/Card";
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<any[] | null>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const { searchJournalEntries } = useFolder();
 
@@ -39,9 +39,8 @@ export default function Search() {
         </div>
       </form>
       <div className="flex flex-col space-y-2 mt-4">
-        {searchResults !== null &&
+        {searchResults ? (
           searchResults.map((result) => {
-            
             return (
               <Link key={result.id} to={`/editor/${result.fileName}`}>
                 <Card>
@@ -57,7 +56,10 @@ export default function Search() {
                 </Card>
               </Link>
             );
-          })}
+          })
+        ) : (
+          <p className={`text-gray-300`}>No results</p>
+        )}
       </div>
     </div>
   );
