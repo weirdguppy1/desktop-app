@@ -9,16 +9,26 @@ export default function ReminderNotification() {
     (hrs * 60 * 60 + min * 60 + sec) * 1000;
 
   useEffect(() => {
+    if (!hasWrittenToday()) {
+      notification(
+        "Relflectionary: Hey!",
+        "Your writing streak will end if you don't write anything today!",
+      );
+    }
+
     const interval = setInterval(() => {
       console.log("still in interval");
 
-      if (!hasWrittenToday()) {
-        notification(
-          "Hey!",
-          "Your writing streak will end if you don't write anything today!"
-        );
+      if (hasWrittenToday()) {
+        clearInterval(interval);
+        return;
       }
-    }, toMilliseconds(0, 30, 0));
+
+      notification(
+        "Relflectionary: Hey!",
+        "Your writing streak will end if you don't write anything today!"
+      );
+    }, toMilliseconds(1, 0, 0));
 
     return () => clearInterval(interval);
   }, []);
