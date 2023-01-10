@@ -2,17 +2,10 @@ import fs from "fs";
 import path from "path";
 import { customAlphabet } from "nanoid";
 import { format, isSameDay } from "date-fns";
-import toast from "react-hot-toast";
-import Store from "electron-store";
+import localforage from "localforage";
 
-type StoreType = {
-  openHistory: string[];
-};
-
-const store = new Store<StoreType>({
-  defaults: {
-    openHistory: [],
-  },
+var store = localforage.createInstance({
+  name: "store",
 });
 
 // const error = (error: string) => `Error! ${error}.`;
@@ -52,21 +45,24 @@ const useFolder = () => {
     if (!folderExists()) return;
     if (fileName === undefined) return;
 
-    console.log(content);
-
     fs.writeFile(`${folder}/${fileName}`, content, (err) => {});
   };
 
-  const getJournalEntry = (fileName: string | undefined) => {
+  const getJournalEntry = async (fileName: string | undefined) => {
     if (!folderExists() && fileName === undefined) return;
 
-    store.set("openHistory", [fileName, ...store.get("openHistory")]);
+    const history = await store.getItem<string[]>("openHistory");
+
+    if (history) {
+      if (history[0] === fileName) return;
+      history.length < 10 ? store.setItem("openHistory", [fileName, ...(history || [])]) : store.setItem("openHistory", [fileName, history.slice(1)])
+    }
 
     const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
     return data;
   };
 
-  const getJournalEntries = (entries?: string[]) => {
+  const getJournalEntries = (entries?: string[] | null) => {
     if (!folderExists()) return [];
 
     const files = entries ? entries : fs.readdirSync(folder);
@@ -145,8 +141,9 @@ const useFolder = () => {
     );
   };
 
-  const getRecentEntries = () => {
-    return getJournalEntries(store.get("openHistory"));
+  const getRecentEntries = async () => {
+    const history = await store.getItem<string[]>("openHistory");
+    return getJournalEntries([...new Set(history)]);
   };
 
   return {
