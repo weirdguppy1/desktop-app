@@ -52,7 +52,7 @@
     @apply absolute w-auto p-3 m-2 min-w-max left-14 rounded-2xl shadow-md
     text-white bg-gray-900 
     text-xs font-bold 
-    transition-all duration-200 scale-0 origin-left;
+    transition-all duration-200 scale-0 origin-left z-50;
   }
 
   .tooltip-top {
