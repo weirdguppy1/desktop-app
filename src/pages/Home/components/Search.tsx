@@ -26,9 +26,9 @@ export default function Search() {
     <div className="flex flex-col max-w-2xl">
       <div className="flex items-center justify-center">
         <button type="button" onClick={openModal}>
-          <div className="flex items-center space-x-1.5 btn btn-black">
-            <h1>Search</h1>
+          <div className="flex items-center p-1.5 btn btn-black space-x-2">
             <MagnifyingGlassIcon className="h-6 w-6" />
+            <p>Find</p>
           </div>
         </button>
       </div>
@@ -44,7 +44,7 @@ export default function Search() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-900  bg-opacity-50" />
+            <div className="fixed inset-0 bg-gray-900  bg-opacity-60" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -58,7 +58,7 @@ export default function Search() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className=" max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className=" max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all w-full">
                   <div className="flex justify-end">
                     <button type="button" onClick={closeModal}>
                       <XCircleIcon className="h-8 w-8" />
@@ -67,20 +67,18 @@ export default function Search() {
                   <form className="flex flex-col space-y-2">
                     <div className="flex space-x-2 items-center">
                       <label className="text-xl">Search</label>
-                      <div className="bg-black p-1.5 rounded-lg">
-                        <MagnifyingGlassIcon className="h-6 w-6 fill-white" />
-                      </div>
+                        <MagnifyingGlassIcon className="h-6 w-6 fill-black" />
                     </div>
-                    <div className="flex space-x-3">
+                    <div className="flex space-x-1">
                       <input
                         placeholder="Search for keywords, title, or date (ex. January 01, 2000)"
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
-                        className="w-full input"
+                        className="w-full input text-sm"
                       />
                       <button
                         onClick={handleSearch}
-                        className="btn btn-cosmic px-4"
+                        className="btn btn-black"
                       >
                         Search
                       </button>

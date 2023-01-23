@@ -7,6 +7,16 @@
     font-family: "Satoshi";
     src: url("./assets/fonts/Satoshi-Medium.otf");
   }
+
+  @font-face {
+    font-family: "Dancing";
+    src: url("./assets/fonts/DancingScript-VariableFont_wght.ttf");
+  }
+
+  @font-face {
+    font-family: "generalsans";
+    src: url("./assets/fonts/GeneralSans-Regular.otf");
+  }
 }
 
 @layer components {

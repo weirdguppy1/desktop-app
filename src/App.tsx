@@ -5,7 +5,7 @@ import Editor from "./pages/Editor/Editor";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home/Home";
 import Calender from "./pages/Calender/Calender";
-import SideBar from "./components/Sidebar";
+import Settings from "./pages/Settings/Settings";
 
 console.log(
   "[App.tsx]",
@@ -23,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/editor/:fileName" element={<Editor />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>
     </HashRouter>

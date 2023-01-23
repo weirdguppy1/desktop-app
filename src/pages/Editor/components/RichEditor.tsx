@@ -4,11 +4,12 @@ import {
   ListBulletIcon,
 } from "@heroicons/react/24/solid";
 import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, generateHTML, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React, { useEffect, useMemo, useState } from "react";
 import useFolder from "../../../hooks/useFolder";
 import useWritingSuggestions from "../../../hooks/useWritingSuggestions";
+import BubbleMenuWrapper from "./BubbleMenuWrapper";
 
 const MenuBar = ({ editor }: any) => {
   if (!editor) {
@@ -17,7 +18,7 @@ const MenuBar = ({ editor }: any) => {
 
   return (
     <div className="flex items-center space-x-4 font-serif text-gray-500 text-xs">
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "is-active" : ""}
@@ -74,7 +75,7 @@ const MenuBar = ({ editor }: any) => {
         className={editor.isActive("heading", { level: 3 }) ? "is-active" : ""}
       >
         H3
-      </button>
+      </button> */}
       {/* <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
         className={editor.isActive("heading", { level: 4 }) ? "is-active" : ""}
@@ -93,7 +94,7 @@ const MenuBar = ({ editor }: any) => {
       >
         h6
       </button> */}
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={editor.isActive("bulletList") ? "is-active" : ""}
       >
@@ -141,12 +142,12 @@ const MenuBar = ({ editor }: any) => {
             </svg>
           }
         />
-      </button>
+      </button> */}
       {/* <button onClick={() => editor.chain().focus().setHardBreak().run()}>
         hard break
       </button> */}
-      <div>|</div>
-      <button
+      {/* <div>|</div> */}
+      {/* <button
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().chain().focus().undo().run()}
       >
@@ -177,7 +178,7 @@ const MenuBar = ({ editor }: any) => {
             </svg>
           }
         />
-      </button>
+      </button> */}
     </div>
   );
 };
@@ -193,6 +194,7 @@ interface EditorProps {
 export default ({ fileName }: EditorProps) => {
   const { getJournalEntry, updateJournalEntry } = useFolder();
   const { random } = useWritingSuggestions();
+  const entry = getJournalEntry(fileName)
 
   const editor = useEditor({
     extensions: [
@@ -218,6 +220,7 @@ export default ({ fileName }: EditorProps) => {
   return (
     <div className="flex flex-col prose w-full space-y-4 mt-10">
       <MenuBar editor={editor} />
+      {editor && <BubbleMenuWrapper editor={editor} />}
       <EditorContent editor={editor} />
     </div>
   );

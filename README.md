@@ -3,14 +3,14 @@
 Journal created with Electron, Vite, Tailwind, and React.
 
 ### Features
-- Reminders
-- Daily Writing Streaks
+- Reminders ✔
+- Daily Writing Streaks ✔
 - Online backups
-- Simplistic, Modern, Beautiful design
-- Prompts/suggestions for writing 
-- Password protection   
-- Open source?
-- Prompts 
+- Simplistic, Modern, Beautiful design ✔
+- Prompts/suggestions for writing ✔
+- Password protection
+- Open source? ✔
+- Prompts ✔
 - Dark Mode
 - AI Helper
 

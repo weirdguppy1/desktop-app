@@ -5,6 +5,8 @@ module.exports = {
     extend: {
       fontFamily: {
         satoshi: ["Satoshi"],
+        dancing: ["Dancing"],
+        generalsans: ["generalsans"],
       },
       fontSize: {
         xxs: [

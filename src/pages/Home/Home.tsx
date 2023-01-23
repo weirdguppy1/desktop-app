@@ -1,24 +1,14 @@
 import { BookOpenIcon, FireIcon } from "@heroicons/react/24/solid";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import useFolder from "../../hooks/useFolder";
 import useStatistics from "../../hooks/useStatistics";
 import Card from "../../components/Card";
-import Search from "./components/Search";
 import Recent from "./components/Recent";
 
 export default function Home() {
   const { getCurrentStreak, getJournalEntryCount } = useStatistics();
-  const { createJournalEntry } = useFolder();
-
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    const fileName = createJournalEntry(new Date());
-    navigate(`/editor/${fileName}`);
-  };
-
   const username = require("os").userInfo().username;
   const streak = getCurrentStreak();
   const entriesCount = getJournalEntryCount();
@@ -26,7 +16,7 @@ export default function Home() {
   return (
     <div className="w-full p-10 item flex flex-col items-center">
       <div className="flex flex-col space-y-16">
-        <div>
+        <div id="introduction">
           <h1 className="text-8xl">
             👋 Hello,{" "}
             <span className="capitalize font-extrabold text-transparent bg-clip-text bg-gradient-to-r duration-500 from-cyan-500 to-purple-600 transition-all bg-size-200 bg-pos-0 hover:bg-pos-100">
@@ -69,7 +59,6 @@ export default function Home() {
         </div>
         <div className="flex-col">
           <Recent />
-          <Search />
         </div>
       </div>
     </div>

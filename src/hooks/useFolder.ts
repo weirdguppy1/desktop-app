@@ -3,6 +3,7 @@ import path from "path";
 import { customAlphabet } from "nanoid";
 import { format, isSameDay } from "date-fns";
 import localforage from "localforage";
+import { toast } from "react-hot-toast";
 
 var store = localforage.createInstance({
   name: "store",
@@ -15,12 +16,25 @@ var store = localforage.createInstance({
 const useFolder = () => {
   const folder = path.join(require("os").homedir(), "Reflectionary");
   const folderExists = () => fs.existsSync(folder);
+
+  const fileExists = (fileName: string | undefined) =>
+    fs.readdirSync(folder).includes(fileName || "");
+
   const fileEnding = "txt";
   const fileNameRegex = /\d\d\d\d-(\d)?\d-\d\d_[a-zA-Z0-9]*/;
 
-  const createJournalEntry = (date: Date) => {
-    if (!folderExists()) return;
+  const createFolder = () => fs.mkdirSync(folder);
 
+  const folderCheck = () => {
+    console.log(fs.existsSync(folder));
+    if (!fs.existsSync(folder)) {
+      console.log("doesn't exist");
+      createFolder();
+    }
+  };
+
+  const createJournalEntry = (date: Date) => {
+    folderCheck();
     const nanoid = customAlphabet(
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
       8
@@ -42,28 +56,36 @@ const useFolder = () => {
     fileName: string | undefined,
     content: string
   ) => {
-    if (!folderExists()) return;
+    folderCheck();
     if (fileName === undefined) return;
 
-    fs.writeFile(`${folder}/${fileName}`, content, (err) => {});
+    fs.writeFileSync(`${folder}/${fileName}`, content);
   };
 
-  const getJournalEntry = async (fileName: string | undefined) => {
-    if (!folderExists() && fileName === undefined) return;
-
-    const history = await store.getItem<string[]>("openHistory");
-
+  const addToHistory = async (fileName: string | undefined) => {
+    let history = await store.getItem<string[]>("openHistory");
     if (history) {
       if (history[0] === fileName) return;
-      history.length < 10 ? store.setItem("openHistory", [fileName, ...(history || [])]) : store.setItem("openHistory", [fileName, history.slice(1)])
+      history.length < 10
+        ? store.setItem("openHistory", [fileName, ...(history || [])])
+        : store.setItem("openHistory", [fileName, history.slice(1)]);
     }
+  };
 
-    const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
-    return data;
+  const getJournalEntry = (fileName: string | undefined) => {
+    folderCheck();
+    addToHistory(fileName).catch((e) => console.log(e));
+    try {
+      const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
+      console.log(data);
+      return data;
+    } catch {
+      toast.error("Error showing journal entry. Could be deleted!");
+    }
   };
 
   const getJournalEntries = (entries?: string[] | null) => {
-    if (!folderExists()) return [];
+    folderCheck();
 
     const files = entries ? entries : fs.readdirSync(folder);
     const res: any[] = [];
@@ -114,6 +136,8 @@ const useFolder = () => {
   };
 
   const searchJournalEntries = (search: string) => {
+    folderCheck();
+
     const entries = getJournalEntries();
     const results = entries.filter((entry) =>
       entry.content
@@ -126,7 +150,10 @@ const useFolder = () => {
   };
 
   const hasWrittenToday = () => {
+    folderCheck();
+
     const files = fs.readdirSync(folder);
+    if (files.length === 0) return;
     files.sort((a, b) => a.localeCompare(b));
 
     const parsed = files[files.length - 1].split("_");
@@ -142,8 +169,17 @@ const useFolder = () => {
   };
 
   const getRecentEntries = async () => {
-    const history = await store.getItem<string[]>("openHistory");
-    return getJournalEntries([...new Set(history)]);
+    folderCheck();
+
+    const RECENT_ENTRIES_NUM = 3;
+    const entries = fs.readdirSync(folder);
+    const history = (await store.getItem<string[]>("openHistory"))?.filter(
+      (entry) => entries.includes(entry)
+    );
+    return getJournalEntries([...new Set(history)]).slice(
+      0,
+      RECENT_ENTRIES_NUM
+    );
   };
 
   return {
@@ -155,6 +191,9 @@ const useFolder = () => {
     searchJournalEntries,
     getRecentEntries,
     hasWrittenToday,
+    createFolder,
+    folderCheck,
+    fileExists,
     folder,
     fileNameRegex,
     fileEnding,

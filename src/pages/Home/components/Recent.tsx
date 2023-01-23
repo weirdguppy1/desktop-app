@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Card from "../../../components/Card";
 import useFolder from "../../../hooks/useFolder";
+import Search from "./Search";
 
 export default function Recent() {
   const { getRecentEntries } = useFolder();
@@ -19,6 +20,7 @@ export default function Recent() {
         <div className="bg-black p-1.5 rounded-lg">
           <ClockIcon className="h-6 w-6 fill-white" />
         </div>
+        <Search />
       </div>
 
       <div className="flex flex-col space-y-2 mt-4 mb-4">
