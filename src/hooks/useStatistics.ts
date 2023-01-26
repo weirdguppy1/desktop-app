@@ -25,7 +25,6 @@ const useStatistics = () => {
         return a.getTime() - b.getTime();
       })
       .reverse();
-    console.log(sorted);
     let streak = 1;
     const today = new Date();
     if (Math.abs(differenceInDays(sorted[0], today)) >= 2) return 0;
@@ -46,7 +45,6 @@ const useStatistics = () => {
     if (!folderExists()) return;
     const files = fs.readdirSync(folder).filter((item) => {
       const replaced = item.replace(`.${fileEnding}`, "");
-      console.log();
       return fileNameRegex.exec(replaced);
     });
     return files.length;

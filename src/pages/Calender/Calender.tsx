@@ -18,10 +18,10 @@ import {
   parse,
   startOfToday,
 } from "date-fns";
-import { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Card from "../../components/Card";
+import { useEffect, useState } from "react";
 import useFolder from "../../hooks/useFolder";
+import Entry from "./components/Entry";
+import chokidar from "chokidar";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -33,11 +33,15 @@ export default function Calender() {
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
   let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
-  const { getJournalEntries } = useFolder();
+  const { getJournalEntries, folder } = useFolder();
   const [entries, setEntries] = useState<any[]>([]);
 
   useEffect(() => {
     setEntries(getJournalEntries());
+
+    chokidar.watch(folder).on("unlink", () => {
+      setEntries(getJournalEntries());
+    });
   }, []);
 
   let days = eachDayOfInterval({
@@ -62,7 +66,7 @@ export default function Calender() {
   return (
     <div className="flex justify-center w-full">
       <div className="pt-16 w-full">
-        <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6">
+        <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6 w-full">
           <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
             <div className="md:pr-14">
               <div className="flex items-center">
@@ -183,27 +187,6 @@ export default function Calender() {
     </div>
   );
 }
-
-interface EntryProps {
-  id: string;
-  fileName: string;
-  title: string | null;
-}
-
-const Entry = ({ id, fileName, title }: EntryProps) => {
-  return (
-    <Link key={id} to={`/editor/${fileName}`}>
-      <Card>
-        <h1 className="text-2xl">
-          {title === "" ? "No title." : title}
-        </h1>
-        <label className="rounded-full py-0.5 px-4 bg-gray-600 text-xxs">
-          {id}
-        </label>
-      </Card>
-    </Link>
-  );
-};
 
 let colStartClasses = [
   "",

@@ -194,7 +194,7 @@ interface EditorProps {
 export default ({ fileName }: EditorProps) => {
   const { getJournalEntry, updateJournalEntry } = useFolder();
   const { random } = useWritingSuggestions();
-  const entry = getJournalEntry(fileName)
+  const entry = getJournalEntry(fileName);
 
   const editor = useEditor({
     extensions: [
@@ -206,7 +206,6 @@ export default ({ fileName }: EditorProps) => {
     content: getJournalEntry(fileName),
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
-      console.log(fileName);
       updateJournalEntry(fileName, html);
     },
 

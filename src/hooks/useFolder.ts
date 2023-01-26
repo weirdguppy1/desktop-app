@@ -5,7 +5,7 @@ import { format, isSameDay } from "date-fns";
 import localforage from "localforage";
 import { toast } from "react-hot-toast";
 
-var store = localforage.createInstance({
+const store = localforage.createInstance({
   name: "store",
 });
 
@@ -26,7 +26,6 @@ const useFolder = () => {
   const createFolder = () => fs.mkdirSync(folder);
 
   const folderCheck = () => {
-    console.log(fs.existsSync(folder));
     if (!fs.existsSync(folder)) {
       console.log("doesn't exist");
       createFolder();
@@ -72,12 +71,16 @@ const useFolder = () => {
     }
   };
 
+  const deleteJournalEntry = (fileName: string | undefined) => {
+    folderCheck();
+    fs.unlinkSync(`${folder}/${fileName}`);
+  };
+
   const getJournalEntry = (fileName: string | undefined) => {
     folderCheck();
     addToHistory(fileName).catch((e) => console.log(e));
     try {
       const data = fs.readFileSync(`${folder}/${fileName}`, "utf-8");
-      console.log(data);
       return data;
     } catch {
       toast.error("Error showing journal entry. Could be deleted!");
@@ -182,6 +185,15 @@ const useFolder = () => {
     );
   };
 
+  const getTitle = (fileName: string) => {
+    const doc = new DOMParser().parseFromString(
+      fs.readFileSync(`${folder}/${fileName}`, "utf-8"),
+      "text/html"
+    );
+    const h1s = doc.getElementsByTagName("h1");
+    return h1s[0].textContent;
+  };
+
   return {
     createJournalEntry,
     updateJournalEntry,
@@ -194,6 +206,8 @@ const useFolder = () => {
     createFolder,
     folderCheck,
     fileExists,
+    deleteJournalEntry,
+    getTitle,
     folder,
     fileNameRegex,
     fileEnding,
