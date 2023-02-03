@@ -1,8 +1,4 @@
 import { BookOpenIcon, FireIcon } from "@heroicons/react/24/solid";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-import useFolder from "../../hooks/useFolder";
 import useStatistics from "../../hooks/useStatistics";
 import Card from "../../components/Card";
 import Recent from "./components/Recent";

@@ -20,7 +20,7 @@ import {
 } from "date-fns";
 import { useEffect, useState } from "react";
 import useFolder from "../../hooks/useFolder";
-import Entry from "./components/Entry";
+import EntryCard from "../../components/EntryCard";
 import chokidar from "chokidar";
 
 function classNames(...classes: any[]) {
@@ -165,7 +165,7 @@ export default function Calender() {
                 {selectedDayEntries.length > 0 ? (
                   <div className="flex flex-col space-y-1.5 p-2">
                     {selectedDayEntries.map((entry) => (
-                      <Entry
+                      <EntryCard
                         key={entry.id}
                         fileName={entry.fileName}
                         title={entry.title}

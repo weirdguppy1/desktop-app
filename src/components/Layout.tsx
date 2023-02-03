@@ -14,19 +14,11 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   const [font, setFont] = useState<string | null>(null);
-  const fonts: { [key: string]: string } = {
-    satoshi: "font-satoshi",
-    mono: "font-mono",
-    serif: "font-serif",
-    dancing: "font-dancing",
-    sans: "font-sans",
-  };
 
   useEffect(() => {
     const setupData = async () => {
       const font = await store.getItem<string>("font");
       setFont(font);
-      console.log(font, "yo");
     };
 
     setupData();
@@ -37,7 +29,7 @@ export default function Layout({ children }: Props) {
   }
 
   return (
-    <div className={clsx("flex", fonts[font])}>
+    <div className="font-satoshi flex">
       <ReminderNotification />
       <SideBar />
       {children}

@@ -17,7 +17,7 @@ const BubbleMenuWrapper = ({ editor }: { editor: Editor }) => {
   return (
     <BubbleMenu editor={editor} tippyOptions={{}}>
       <div className="flex items-center">
-        <div className="flex items-center space-x-4 font-serif text-white text-xs px-6 py-2 rounded-xl bg-gray-900">
+        <div className="flex items-center space-x-4 font-satoshi text-white text-xs px-6 py-2 rounded-xl bg-gray-900 shadow-lg">
           <button
             onClick={() => editor.chain().focus().toggleBold().run()}
             disabled={!editor.can().chain().focus().toggleBold().run()}

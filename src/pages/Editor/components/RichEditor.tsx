@@ -6,8 +6,10 @@ import {
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import clsx from "clsx";
 import React, { useEffect, useMemo, useState } from "react";
 import useFolder from "../../../hooks/useFolder";
+import useSettings from "../../../hooks/useSettings";
 import useWritingSuggestions from "../../../hooks/useWritingSuggestions";
 import BubbleMenuWrapper from "./BubbleMenuWrapper";
 
@@ -194,7 +196,8 @@ interface EditorProps {
 export default ({ fileName }: EditorProps) => {
   const { getJournalEntry, updateJournalEntry } = useFolder();
   const { random } = useWritingSuggestions();
-  const entry = getJournalEntry(fileName);
+
+  const { font, fonts } = useSettings();
 
   const editor = useEditor({
     extensions: [
@@ -217,7 +220,12 @@ export default ({ fileName }: EditorProps) => {
   });
 
   return (
-    <div className="flex flex-col prose w-full space-y-4 mt-10">
+    <div
+      className={clsx(
+        "flex flex-col prose w-full space-y-4 mt-10",
+        font && fonts[font]
+      )}
+    >
       <MenuBar editor={editor} />
       {editor && <BubbleMenuWrapper editor={editor} />}
       <EditorContent editor={editor} />

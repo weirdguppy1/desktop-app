@@ -4,12 +4,14 @@ import useFolder from "../../hooks/useFolder";
 import RichEditor from "./components/RichEditor";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { format } from "date-fns";
+import useSettings from "../../hooks/useSettings";
+import clsx from "clsx";
 
 export default function Editor() {
   const { fileName } = useParams();
   const { fileExists } = useFolder();
   const exists = fileExists(fileName);
-
+  
   if (fileName === undefined || !exists) {
     return (
       <div className="flex flex-col space-y-4">
@@ -22,7 +24,7 @@ export default function Editor() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full mt-8 p-4">
+    <div className={"flex flex-col items-center w-full mt-8 p-4"}>
       <h1 className="text-4xl font-bold items-center">
         {format(new Date(fileName?.split("_")[0]), "MMMM dd, Y")}
       </h1>

@@ -7,18 +7,19 @@ import {
 import { format } from "date-fns";
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Card from "../../../components/Card";
-import useFolder from "../../../hooks/useFolder";
+import Card from "./Card";
+import useFolder from "../hooks/useFolder";
 
 interface EntryProps {
   id: string;
   fileName: string;
   title: string | null;
+  date?: string;
 }
 
-const Entry = ({ id, fileName, title }: EntryProps) => {
+const EntryCard = ({ id, fileName, title, date }: EntryProps) => {
   const navigate = useNavigate();
-  const { deleteJournalEntry, getJournalEntry, getTitle } = useFolder();
+  const { deleteJournalEntry } = useFolder();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const openModal = () => setIsOpen(true);
@@ -27,7 +28,8 @@ const Entry = ({ id, fileName, title }: EntryProps) => {
   return (
     <>
       <Card>
-        <div className="flex items-center space-x-4">
+        {/* {date && <h1 className="font-semibold mb-3 text-lg">{date}</h1>} */}
+        <div className="flex items-start space-x-4">
           <div className="flex flex-col">
             <button
               onClick={openModal}
@@ -42,9 +44,14 @@ const Entry = ({ id, fileName, title }: EntryProps) => {
               <PencilSquareIcon className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-2">
             <h1 className="text-2xl">{title === "" ? "No title." : title}</h1>
-            <label className="rounded-full py-0.5 px-4 bg-gray-600 text-xxs w-fit">
+            {date && (
+              <label className="rounded-full py-0.5 px-4 bg-blue-600 text-xs font-bold">
+                {date}
+              </label>
+            )}
+            <label className="rounded-full py-0.5 px-4 bg-gray-600 text-xs">
               {id}
             </label>
           </div>
@@ -94,15 +101,19 @@ const Entry = ({ id, fileName, title }: EntryProps) => {
                       "?
                     </h1>
                     <p className="mt-4 text-sm">
-                      Anthing you write in your journal should be
-                      considered and not put into the waste bin!{" "}
+                      Anthing you write in your journal should be considered and
+                      not put into the waste bin!{" "}
                       <span className="animate-pulse">❤️</span>
                     </p>
                     <p className="mt-4 text-sm">
-                      Notice: You can still retreive this file in your Trash bin, if you regretted the decision. 
+                      Notice: You can still retreive this file in your Trash
+                      bin, if you regretted the decision.
                     </p>
                     <button
-                      onClick={() => deleteJournalEntry(fileName)}
+                      onClick={() => {
+                        setIsOpen(false);
+                        deleteJournalEntry(fileName);
+                      }}
                       className="btn bg-red-500 text-white mt-10"
                     >
                       Delete anyway.
@@ -118,4 +129,4 @@ const Entry = ({ id, fileName, title }: EntryProps) => {
   );
 };
 
-export default Entry;
+export default EntryCard;

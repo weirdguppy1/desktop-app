@@ -1,12 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
 import localforage from "localforage";
-import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
+import { Listbox, Switch, Transition } from "@headlessui/react";
+import {
+  CheckIcon,
+  ChevronUpDownIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
-
-const store = localforage.createInstance({
-  name: "Settings",
-});
+import { store } from "../../hooks/useSettings";
 
 export default function Settings() {
   const appearanceSettings = [
@@ -18,16 +19,22 @@ export default function Settings() {
   ];
 
   const [selectedFont, setSelectedFont] = useState<string>("satoshi");
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   const handleFontChange = (value: string) => {
     setSelectedFont(value);
-    store.setItem<string>("font", value).then(() => toast.success("Reload the app to see changes!"));
+    store
+      .setItem<string>("font", value)
+      .then(() => toast.success("Reload the app to see changes!"));
   };
 
   useEffect(() => {
     const setupData = async () => {
       const font = await store.getItem<string>("font");
+      const dark = await store.getItem<boolean>("font");
+
       setSelectedFont(font || "satoshi");
+      setDarkMode(dark || false);
     };
 
     setupData();
@@ -45,14 +52,9 @@ export default function Settings() {
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold">Appearance</h2>
           <hr className="mb-8 mt-2" />
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-8">
             <div className="flex flex-col space-y-2">
-              <h3 className="text-xl">Font</h3>
-              {/* <select className="bg-gray-800 text-white px-4 py-2 rounded-xl">
-                  {appearanceSettings[0].selections.map((option) => (
-                    <option>{option}</option>
-                  ))}
-              </select> */}
+              <h1 className="text-xl">Font</h1>
               <Listbox value={selectedFont} onChange={handleFontChange}>
                 <div className="relative mt-1">
                   <Listbox.Button className="border-2 border-gray-100 relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -110,6 +112,28 @@ export default function Settings() {
                   </Transition>
                 </div>
               </Listbox>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <h1 className="text-xl">Dark Mode</h1>
+              <div className="px-4 py-1 shadow-md w-fit rounded-xl bg-red-500 text-white text-sm">
+                <div className="flex space-x-3 items-center">
+                  <ExclamationTriangleIcon className="h-6 w-6 " />
+                  <h1>It is recommended to use 'light' mode for writing. </h1>
+                </div>
+              </div>
+              <Switch
+                checked={darkMode}
+                onChange={setDarkMode}
+                className={`${darkMode ? "bg-gray-900" : "bg-gray-200"}
+          relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+              >
+                <span className="sr-only">Use setting</span>
+                <span
+                  aria-hidden="true"
+                  className={`${darkMode ? "translate-x-9" : "translate-x-0"}
+            pointer-events-none inline-block h-[34px] w-[34px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                />
+              </Switch>
             </div>
           </div>
         </div>

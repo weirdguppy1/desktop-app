@@ -79,7 +79,7 @@
   }
 
   .input {
-    @apply border-2 border-gray-200 rounded-lg px-4 py-2 transition duration-100 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:shadow-md 
+    @apply border-2 border-gray-200 rounded-lg px-4 py-2 transition duration-100 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-white focus:shadow-md 
   }
 
   /* 
